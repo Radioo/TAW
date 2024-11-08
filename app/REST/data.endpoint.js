@@ -66,7 +66,31 @@ const dataEndpoint = (router) => {
     const requiredFields = ['title', 'text', 'image'];
 
     router.get('/api/posts', async (request, response, next) => {
-        response.status(200).send({posts: posts});
+        const page = parseInt(request.query.page);
+        const limit = parseInt(request.query.limit);
+        const title = request.query.title;
+
+        let filteredPosts = posts;
+        if(title) {
+            filteredPosts = filteredPosts.filter(post => {
+                return post.title.toLowerCase().includes(title.toLowerCase());
+            });
+        }
+
+        if(page && limit) {
+            const startIndex = (page - 1) * limit;
+            const endIndex = page * limit;
+
+            if(filteredPosts.length <= startIndex) {
+                response.status(400).send({message: 'Invalid page number'});
+                return;
+            }
+
+            response.status(200).send({posts: filteredPosts.slice(startIndex, endIndex)});
+            return;
+        }
+
+        response.status(200).send({posts: filteredPosts});
     });
 
     router.get('/api/posts/:id', async (request, response, next) => {
@@ -74,7 +98,7 @@ const dataEndpoint = (router) => {
         const post = posts.find(post => post.id === parseInt(postId));
 
         if(!post) {
-            response.status(404).send({message: 'Post not found'});
+            response.status(404).send({message: 'Post not found '});
             return;
         }
 
@@ -105,9 +129,27 @@ const dataEndpoint = (router) => {
             return;
         }
 
-        posts[postIndex] = request.body.updatedPost;
+        for(const field of requiredFields) {
+            if(request.body.updatedPost[field]) {
+                posts[postIndex][field] = request.body.updatedPost[field];
+            }
+        }
 
         response.status(200).send({post: posts[postIndex]});
+    });
+
+    router.delete('/api/posts/:id', async (request, response, next) => {
+        const postId = request.params.id;
+        const postIndex = posts.findIndex(post => post.id === parseInt(postId));
+
+        if(postIndex === -1) {
+            response.status(404).send({message: 'Post not found'});
+            return;
+        }
+
+        posts.splice(postIndex, 1);
+
+        response.status(200).send({message: 'Post deleted'});
     });
 };
 
