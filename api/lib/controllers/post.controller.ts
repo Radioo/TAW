@@ -1,7 +1,8 @@
 import Controller from '../interfaces/controller.interface';
 import {Request, Response, NextFunction, Router} from 'express';
 import {checkPostCount} from "../middlewares/checkPostCount.middleware";
-import DataService from "../modules/services/data.service";
+import PostService from "../modules/services/data.service";
+import Joi from "joi";
 
 let testArr = [4, 5, 6, 3, 5, 3, 7, 5, 13, 5, 6, 4, 3, 6, 3, 6];
 
@@ -9,7 +10,7 @@ class PostController implements Controller {
     public path = '/api/post';
     public router = Router();
 
-    private dataService = new DataService();
+    private postService = new PostService();
 
     constructor() {
         this.initializeRoutes();
@@ -25,7 +26,7 @@ class PostController implements Controller {
     }
 
     private getAll = async (req: Request, res: Response, next: NextFunction) => {
-        return res.status(200).json(await this.dataService.getAll());
+        return res.status(200).json(await this.postService.getAll());
     }
 
     private getXElements = async (req: Request, res: Response, next: NextFunction) => {
@@ -35,22 +36,23 @@ class PostController implements Controller {
     }
 
     private deleteAll = async (req: Request, res: Response, next: NextFunction) => {
-        await this.dataService.deleteAllPosts();
+        await this.postService.deleteAllPosts();
         return res.status(200).json({message: 'OK'});
     }
 
     private addData = async (request: Request, response: Response, next: NextFunction) => {
         const {title, text, image} = request.body;
 
-        const readingData = {
-            title,
-            text,
-            image
-        };
+        const schema = Joi.object({
+            title: Joi.string().required(),
+            text: Joi.string().required(),
+            image: Joi.string().uri().required()
+        });
 
         try {
-            await this.dataService.createPost(readingData);
-            response.status(200).json(readingData);
+            const validatedData = await schema.validateAsync({title, text, image});
+            await this.postService.createPost(validatedData);
+            response.status(200).json(validatedData);
         } catch (error) {
             console.error(`Validation Error: ${error.message}`);
             response.status(400).json({error: 'Invalid input data.'});
@@ -59,13 +61,13 @@ class PostController implements Controller {
 
     private getElementById = async (request: Request, response: Response, next: NextFunction) => {
         const { id } = request.params;
-        const allData = await this.dataService.getById(id);
+        const allData = await this.postService.getById(id);
         response.status(200).json(allData);
     }
 
     private removePost = async (request: Request, response: Response, next: NextFunction) => {
         const { id } = request.params;
-        await this.dataService.deleteById(id);
+        await this.postService.deleteById(id);
         response.sendStatus(200);
     };
 }
