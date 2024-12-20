@@ -1,0 +1,20 @@
+<div class="container">
+    <div class="buttons">
+        <p-button class="add-comment"
+                  label="Add comment"
+                  (onClick)="showNewCommentForm = !showNewCommentForm"
+        >
+        </p-button>
+        @if (showNewCommentForm) {
+            <p-button label="Save comment" (onClick)="onSaveComment()" severity="success"></p-button>
+        }
+    </div>
+    @if (showNewCommentForm) {
+        <p-editor [(ngModel)]="newCommentContent" [style]="{height: '200px'}"></p-editor>
+    }
+    <div class="comments">
+        @for (comment of comments; track $index) {
+            <div class="comment" [innerHTML]="comment"></div>
+        }
+    </div>
+</div>

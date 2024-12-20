@@ -1,13 +1,24 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {Component, OnInit} from '@angular/core';
+import {RouterOutlet} from '@angular/router';
+import {BlogComponent} from "./components/blog/blog.component";
+import {PrimeNG} from "primeng/config";
+import {Toast} from "primeng/toast";
+import {MessageService} from "primeng/api";
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [RouterOutlet],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+    selector: 'app-root',
+    imports: [BlogComponent, Toast],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss',
+    providers: [MessageService],
 })
-export class AppComponent {
-  title = 'blog';
+export class AppComponent implements OnInit {
+    constructor(
+        private readonly primeng: PrimeNG,
+    ) {
+    }
+
+    ngOnInit() {
+        this.primeng.ripple.set(true);
+    }
 }

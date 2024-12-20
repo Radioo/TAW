@@ -1,0 +1,12 @@
+div.container {
+    display: flex;
+    flex-wrap: nowrap;
+    flex-direction: column;
+    gap: 0.5em;
+
+    & > div.buttons {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5em;
+    }
+}

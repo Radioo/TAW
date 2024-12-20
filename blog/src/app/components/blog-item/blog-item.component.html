@@ -1,0 +1,9 @@
+<p-card [header]="title">
+    <app-blog-item-image [image]="image"></app-blog-item-image>
+    <app-blog-item-text [text]="text"></app-blog-item-text>
+
+    <p-panel header="Comments">
+        <app-blog-item-comments [postId]="postId"></app-blog-item-comments>
+    </p-panel>
+</p-card>
+

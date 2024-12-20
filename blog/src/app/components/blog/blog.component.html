@@ -1,0 +1,36 @@
+<div class="container">
+    <p-button label="Dodaj post" (onClick)="showNewPostForm = !showNewPostForm"></p-button>
+    <p-button label="Zobacz galerię" (onClick)="galleryVisible = !galleryVisible"></p-button>
+    @if (showNewPostForm) {
+        <p-card header="Nowy Post">
+            <div class="new-post-card">
+                <p-floatlabel variant="on">
+                    <input type="text" required pInputText [(ngModel)]="newPostTitle">
+                    <label>Tytuł</label>
+                </p-floatlabel>
+                <p-editor [(ngModel)]="newPostContent" [style]="{height: '200px'}"></p-editor>
+                <p-button label="Dodaj" severity="success" (onClick)="addNewPost()"></p-button>
+            </div>
+        </p-card>
+    }
+
+    <div class="post-list">
+        @for (item of items; track $index) {
+            <app-blog-item [image]="item.image"
+                           [text]="item.text"
+                           [postId]="item.id"
+                           [title]="item.title"
+            >
+            </app-blog-item>
+        }
+    </div>
+</div>
+
+<p-galleria [value]="getImagesFromPosts()" [(visible)]="galleryVisible" [fullScreen]="true">
+    <ng-template pTemplate="item" let-item>
+        <img [src]="item" style="width: 80%; display: block;"/>
+    </ng-template>
+    <ng-template pTemplate="thumbnail" let-item>
+        <img [src]="item" style="width: 50px; display: block;"/>
+    </ng-template>
+</p-galleria>
