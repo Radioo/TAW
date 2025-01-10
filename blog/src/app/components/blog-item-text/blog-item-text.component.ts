@@ -1,10 +1,13 @@
 import {Component, Input} from '@angular/core';
 import {SummaryPipe} from "../../pipes/summary.pipe";
+import {Button} from "primeng/button";
 
 @Component({
     selector: 'app-blog-item-text',
     imports: [
-        SummaryPipe
+        SummaryPipe,
+        Button
+
     ],
     templateUrl: './blog-item-text.component.html',
     styleUrl: './blog-item-text.component.scss'

@@ -1,6 +1,7 @@
 <div class="container">
     <p-button label="Dodaj post" (onClick)="showNewPostForm = !showNewPostForm"></p-button>
     <p-button label="Zobacz galerię" (onClick)="galleryVisible = !galleryVisible"></p-button>
+    <p-button label="Odśwież" severity="primary" (onClick)="refreshPosts()" [loading]="postsLoading"></p-button>
     @if (showNewPostForm) {
         <p-card header="Nowy Post">
             <div class="new-post-card">
@@ -15,13 +16,18 @@
     }
 
     <div class="post-list">
-        @for (item of items; track $index) {
+        @for (item of items | filterText:filter; track $index) {
             <app-blog-item [image]="item.image"
                            [text]="item.text"
                            [postId]="item.id"
                            [title]="item.title"
+                           [post]="item"
             >
             </app-blog-item>
+        } @empty {
+            @if (!postsLoading) {
+                <p>Nie znaleziono postów</p>
+            }
         }
     </div>
 </div>

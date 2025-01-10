@@ -1,8 +1,7 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {DataService} from "../../services/data.service";
 import {CommonModule} from "@angular/common";
 import {BlogItemComponent} from "../blog-item/blog-item.component";
-import {Ripple} from "primeng/ripple";
 import {Card} from "primeng/card";
 import {Button} from "primeng/button";
 import {FloatLabel} from "primeng/floatlabel";
@@ -11,22 +10,25 @@ import {FormsModule} from "@angular/forms";
 import {Editor} from "primeng/editor";
 import {MessageService} from "primeng/api";
 import {GalleriaModule} from "primeng/galleria";
+import {FilterTextPipe} from "../../pipes/filter-text.pipe";
 
 @Component({
     selector: 'app-blog',
     standalone: true,
-    imports: [CommonModule, BlogItemComponent, Ripple, Card, Button, FloatLabel, InputText, FormsModule, Editor, GalleriaModule],
+    imports: [CommonModule, BlogItemComponent, Card, Button, FloatLabel, InputText, FormsModule, Editor, GalleriaModule, FilterTextPipe],
     providers: [DataService],
     templateUrl: './blog.component.html',
     styleUrl: './blog.component.scss'
 })
 export class BlogComponent implements OnInit{
-    public items: any;
+    public items: any[] = [];
+    @Input() filter: string = '';
 
     protected showNewPostForm: boolean = false;
     protected newPostContent: string = '';
     protected newPostTitle: string = '';
     protected galleryVisible: boolean = false;
+    protected postsLoading = true;
 
     constructor(
         private service: DataService,
@@ -35,7 +37,7 @@ export class BlogComponent implements OnInit{
     }
 
     ngOnInit() {
-        this.items = this.service.getAll();
+        this.getPosts();
     }
 
     addNewPost() {
@@ -59,5 +61,20 @@ export class BlogComponent implements OnInit{
 
     getImagesFromPosts(): string[] {
         return this.items.map((item: any) => item.image);
+    }
+
+    refreshPosts() {
+        this.getPosts();
+    }
+
+    private getPosts() {
+        this.postsLoading = true;
+
+        setTimeout(() => {
+            this.service.getAll().subscribe(items => {
+                this.items = items;
+                this.postsLoading = false;
+            });
+        }, 1000);
     }
 }

@@ -4,7 +4,7 @@ import PostModel from '../schemas/data.schema';
 class DataService {
     public async getAll() {
         try {
-            const result = await PostModel.find({}, { __v: 0, _id: 0 });
+            const result = await PostModel.find({}, {_v: 0});
             return result;
         } catch (error) {
             throw new Error(`Query failed: ${error}`);

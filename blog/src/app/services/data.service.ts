@@ -1,4 +1,6 @@
 import {Injectable} from '@angular/core';
+import {HttpClient} from "@angular/common/http";
+import {timeout} from "rxjs";
 
 const posts = [
     {
@@ -68,13 +70,21 @@ const posts = [
     providedIn: 'root'
 })
 export class DataService {
+    private readonly url = 'http://localhost:3100';
+
     private comments = new Map<string, string[]>();
 
-    constructor() {
+    constructor(
+        private readonly http: HttpClient,
+    ) {
     }
 
     public getAll() {
-        return posts;
+        return this.http.get<any[]>(`${this.url}/api/post`).pipe();
+    }
+
+    public getOne(id: string) {
+        return this.http.get<any>(`${this.url}/api/post/${id}`)
     }
 
     public addComment(postId: string, content: string) {

@@ -5,12 +5,16 @@ import bodyParser from 'body-parser';
 import morgan from 'morgan';
 import mongoose from "mongoose";
 import {logRequest} from "./middlewares/logRequest.middleware";
+import cors from 'cors';
 
 class App {
     public app: express.Application;
 
     constructor(controllers: Controller[]) {
         this.app = express();
+
+        // Cors
+        this.app.use(cors())
 
         this.initializeMiddlewares();
         this.initializeControllers(controllers);
