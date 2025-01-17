@@ -9,6 +9,10 @@
                     <input type="text" required pInputText [(ngModel)]="newPostTitle">
                     <label>Tytuł</label>
                 </p-floatlabel>
+                <p-floatlabel variant="on">
+                    <input type="url" required pInputText [(ngModel)]="newPostImage">
+                    <label>Obraz</label>
+                </p-floatlabel>
                 <p-editor [(ngModel)]="newPostContent" [style]="{height: '200px'}"></p-editor>
                 <p-button label="Dodaj" severity="success" (onClick)="addNewPost()"></p-button>
             </div>

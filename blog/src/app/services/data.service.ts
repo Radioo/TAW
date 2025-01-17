@@ -103,12 +103,11 @@ export class DataService {
         return this.comments.get(postId) || [];
     }
 
-    public addPost(title: string, text: string) {
-        posts.push({
+    public addPost(title: string, image: string, text: string) {
+        return this.http.post<void>(`${this.url}/api/post`, {
             title,
+            image,
             text,
-            image: 'https://www.pandasecurity.com/en/mediacenter/src/uploads/2013/11/pandasecurity-facebook-photo-privacy.jpg',
-            id: Math.random().toString(36).substring(7)
         });
     }
 }

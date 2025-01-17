@@ -27,6 +27,7 @@ export class BlogComponent implements OnInit{
     protected showNewPostForm: boolean = false;
     protected newPostContent: string = '';
     protected newPostTitle: string = '';
+    protected newPostImage: string = '';
     protected galleryVisible: boolean = false;
     protected postsLoading = true;
 
@@ -51,12 +52,17 @@ export class BlogComponent implements OnInit{
             return;
         }
 
-        this.service.addPost(this.newPostTitle, this.newPostContent);
-        this.showNewPostForm = false;
-        this.newPostContent = '';
-        this.newPostTitle = '';
+        this.service.addPost(this.newPostTitle, this.newPostImage, this.newPostContent).subscribe({
+            next: () => {
+                this.showNewPostForm = false;
+                this.newPostContent = '';
+                this.newPostTitle = '';
 
-        this.messageService.add({severity:'success', summary:'Sukces', detail:'Post został dodany'});
+                this.messageService.add({severity:'success', summary:'Sukces', detail:'Post został dodany'});
+                this.refreshPosts();
+            }
+        });
+
     }
 
     getImagesFromPosts(): string[] {
@@ -72,7 +78,7 @@ export class BlogComponent implements OnInit{
 
         setTimeout(() => {
             this.service.getAll().subscribe(items => {
-                this.items = items;
+                this.items = items.reverse();
                 this.postsLoading = false;
             });
         }, 1000);

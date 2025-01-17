@@ -37,7 +37,7 @@ export class SearchBarComponent {
 
     sendFilter($event: any): void {
         this.name.emit($event);
-        this.router.navigate(['/'], {queryParams: {name:
+        this.router.navigate(['/blog'], {queryParams: {name:
                     $event?.toLowerCase()
             }});
     }

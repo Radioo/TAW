@@ -4,10 +4,11 @@ import {BlogComponent} from "./components/blog/blog.component";
 import {PrimeNG} from "primeng/config";
 import {Toast} from "primeng/toast";
 import {MessageService} from "primeng/api";
+import {NavbarComponent} from "./shared/navbar/navbar.component";
 
 @Component({
     selector: 'app-root',
-    imports: [BlogComponent, Toast, RouterOutlet],
+    imports: [BlogComponent, Toast, RouterOutlet, NavbarComponent],
     templateUrl: './app.component.html',
     styleUrl: './app.component.scss',
     providers: [MessageService],
